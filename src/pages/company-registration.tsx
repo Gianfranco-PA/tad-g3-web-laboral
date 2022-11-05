@@ -1,51 +1,75 @@
+import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
 import background from 'src/common/assets/images/Login_espacio.jpeg'
 import { Campo } from 'src/common/components/campoInput'
-
+import server from 'src/common/utils/constans/urlEnvironment'
+import { EmpresaType } from 'src/modules/mongodb/schema/empresaModel'
 //Parameters:
-interface Usuario {
-  //section 1:
-  business_name: string
-  business_ruc: string
-  address: string
-  city: string
-  business: string
-  business_field: string
+interface Empresa extends EmpresaType {
+  correo: string
+  contrasenia: string
+  conf_contrasenia: string
+}
 
-  //section 2:
-  fname: string
-  lname: string
-  phone: string
+const INITIAL_STATE = {
+  nombre_empresa: '',
+  ruc: '',
+  direccion: '',
+  ciudad: '',
+  rubro: '',
 
-  //section 3:
-  email: string
-  pass: string
-  cpass: string
+  nombre_contacto: '',
+  apellidos: '',
+  celular: '',
+
+  correo: '',
+  contrasenia: '',
+  conf_contrasenia: '',
 }
 
 export default function LoginPage({}) {
-  const [usuario, setUsuario] = useState<Usuario>({
-    business_name: '',
-    business_ruc: '',
-    address: '',
-    city: '',
-    business: '',
-    business_field: '',
+  const [empresa, setEmpresa] = useState<Empresa>(INITIAL_STATE)
 
-    fname: '',
-    lname: '',
-    phone: '',
+  const [logueado, setLogueado] = useState(null)
 
-    email: '',
-    pass: '',
-    cpass: '',
-  })
+  const router = useRouter()
+  if (logueado) router.push('/login')
 
   const changeHandler = (e: FormEvent<HTMLInputElement>) => {
-    return setUsuario({
-      ...usuario,
+    return setEmpresa({
+      ...empresa,
       [e.currentTarget.name]: e.currentTarget.value,
     })
+  }
+
+  const reset = () => {
+    setEmpresa(INITIAL_STATE)
+  }
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log('AQUI')
+    await fetch(`${server}/api/empresa`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        credenciales: {
+          correo: empresa.correo,
+          contrasenia: empresa.contrasenia,
+        },
+        empresa: {
+          ...empresa,
+        },
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (typeof data == 'object') setLogueado(data)
+      })
+    reset()
   }
 
   return (
@@ -61,49 +85,52 @@ export default function LoginPage({}) {
         className="w-50 h-50 my-5 d-flex flex-column justify-content-center align-items-center rounded-5"
         style={{ backgroundColor: 'white' }}
       >
-        <form className="w-100 py-5 d-flex flex-column justify-content-center align-items-center">
+        <form
+          className="w-100 py-5 d-flex flex-column justify-content-center align-items-center"
+          onSubmit={onSubmit}
+        >
           <h1 className="fs-title">Sobre la Empresa</h1>
           <h3 className="fs-subtitle">Ingrese datos de la Empresa</h3>
 
           <Campo
-            id="business_name"
-            name="business_name"
+            id="nombre_empresa"
+            name="nombre_empresa"
             label="Nombre de la empresa:"
-            value={usuario.business_name}
+            value={empresa.nombre_empresa!}
             onChange={changeHandler}
             type="text"
           />
           <Campo
-            id="business_ruc"
-            name="business_ruc"
+            id="ruc"
+            name="ruc"
             label="RUC:"
-            value={usuario.business_ruc}
+            value={empresa.ruc!}
             onChange={changeHandler}
             type="text"
           />
           <Campo
-            id="address"
-            name="address"
+            id="direccion"
+            name="direccion"
             label="Direccion:"
-            value={usuario.address}
+            value={empresa.direccion!}
             onChange={changeHandler}
             type="text"
           />
 
           <Campo
-            id="city"
-            name="city"
+            id="ciudad"
+            name="ciudad"
             label="Ciudad:"
-            value={usuario.city}
+            value={empresa.ciudad!}
             onChange={changeHandler}
             type="text"
           />
 
           <Campo
-            id="business_field"
-            name="business_field"
+            id="rubro"
+            name="rubro"
             label="Rubro:"
-            value={usuario.business_field}
+            value={empresa.rubro!}
             onChange={changeHandler}
             type="text"
           />
@@ -112,28 +139,28 @@ export default function LoginPage({}) {
           <h3 className="fs-subtitle">Ingrese datos del Contacto</h3>
 
           <Campo
-            id="fname"
-            name="fname"
+            id="nombre_contacto"
+            name="nombre_contacto"
             label="Nombre:"
-            value={usuario.fname}
+            value={empresa.nombre_contacto!}
             onChange={changeHandler}
             type="text"
           />
 
           <Campo
-            id="lname"
-            name="lname"
+            id="apellidos"
+            name="apellidos"
             label="Apellidos:"
-            value={usuario.lname}
+            value={empresa.apellidos!}
             onChange={changeHandler}
             type="text"
           />
 
           <Campo
-            id="phone"
-            name="phone"
+            id="celular"
+            name="celular"
             label="Nro Celular:"
-            value={usuario.phone}
+            value={empresa.celular!}
             onChange={changeHandler}
             type="text"
           />
@@ -142,39 +169,34 @@ export default function LoginPage({}) {
           <h3 className="fs-subtitle">Ingrese sus credenciales</h3>
 
           <Campo
-            id="email"
-            name="email"
+            id="correo"
+            name="correo"
             label="Email:"
-            value={usuario.email}
+            value={empresa.correo}
             onChange={changeHandler}
             type="text"
           />
 
           <Campo
-            id="pass"
-            name="pass"
+            id="contrasenia"
+            name="contrasenia"
             label="Contraseña:"
-            value={usuario.pass}
+            value={empresa.contrasenia}
             onChange={changeHandler}
             type="password"
           />
 
           <Campo
-            id="cpass"
-            name="cpass"
+            id="conf_contrasenia"
+            name="conf_contrasenia"
             label="Confirmar contraseña:"
-            value={usuario.cpass}
+            value={empresa.conf_contrasenia}
             onChange={changeHandler}
             type="password"
           />
-
-          <input
-            name="login"
-            id="login"
-            className="btn btn-primary mt-3 fs-5"
-            type="button"
-            value="Enviar"
-          />
+          <button type="submit" className="btn btn-primary mt-3 fs-5">
+            Registrarse
+          </button>
         </form>
       </div>
     </div>

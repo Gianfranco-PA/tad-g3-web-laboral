@@ -1,35 +1,37 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { dbConnect } from 'src/modules/mongodb/inicializacion'
-import Persona, { PersonaType } from 'src/modules/mongodb/schema/personaModel'
-
-dbConnect()
+import { registrarPersona } from 'src/common/utils/crudMetodos/personaMetodos'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<PersonaType>,
+  res: NextApiResponse<any>,
 ) {
   const { method, body } = req
   switch (method) {
-    case 'GET':
-      try {
-        const allPersona = await Persona.find()
-        return res.status(200).json(allPersona)
+    // case 'GET':
+    //   try {
+    //     const { credenciales } = body
+    //     const allCredenciales = await Credencial.findOne({ credenciales })
+    //     const allPersona = await Persona.find({
+    //       credenciales: allCredenciales._id,
+    //     })
+    //     return res.status(200).json(allPersona)
 
-        //return res.status(200).json({ msg: 'Hola' })
-      } catch (error) {
-        const msg = (error as Error).message
-        return res.status(500).json({ msg })
-      }
+    //     //return res.status(200).json({ msg: 'Hola' })
+    //   } catch (error) {
+    //     const msg = (error as Error).message
+    //     return res.status(500).json({ msg })
+    //   }
+
     case 'POST':
-      try {
-        const newPersona = new Persona(body)
-        //newData.id = new Types.ObjectId()
-        const savedPersona = await newPersona.save()
-        return res.status(201).json(savedPersona)
-      } catch (error) {
-        const msg = (error as Error).message
-        return res.status(500).json({ msg })
-      }
+      const { credenciales, persona } = body
+      if (!credenciales || !persona)
+        return res
+          .status(404)
+          .json({ msg: 'Los datos requeridos estan incompletos' })
+
+      const result = await registrarPersona(credenciales, persona)
+      const json = 'data' in result ? result.data : result.msg
+      return res.status(result.status).json(json)
     default:
       return res.status(400).json({ msg: 'Este metodo no esta implementado' })
   }

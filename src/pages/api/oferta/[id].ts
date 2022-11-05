@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { dbConnect } from 'src/modules/mongodb/inicializacion'
-import Oferta, { OfertaType } from 'src/modules/mongodb/schema/ofertaModel'
-
-dbConnect()
+import {
+  actualizarOferta,
+  eliminarOferta,
+  ofertaPorId,
+} from 'src/common/utils/crudMetodos/ofertaMetodos'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<OfertaType>,
+  res: NextApiResponse<any>,
 ) {
   const {
     method,
@@ -15,35 +16,18 @@ export default async function handler(
   } = req
   switch (method) {
     case 'GET':
-      try {
-        const oneOferta = await Oferta.findById(id)
-        if (!oneOferta)
-          return res.status(404).json({ msg: 'No se encontro el Dato' })
-        return res.status(200).json(oneOferta)
-      } catch (error) {
-        const msg = (error as Error).message
-        return res.status(500).json({ msg })
-      }
+      const encontrado = await ofertaPorId(id as string)
+      const jsonGet = 'data' in encontrado ? encontrado.data : encontrado.msg
+      return res.status(encontrado.status).json(jsonGet)
     case 'PUT':
-      try {
-        const one = await Oferta.findByIdAndUpdate(id, body, {
-          new: true,
-        })
-        if (!one) return res.status(404).json({ msg: 'No se encontro el Dato' })
-        return res.status(200).json(one)
-      } catch (error) {
-        const msg = (error as Error).message
-        return res.status(500).json({ msg })
-      }
+      const { persona } = body
+      const result = await actualizarOferta(body.id, persona)
+      const json = 'data' in result ? result.data : result.msg
+      return res.status(result.status).json(json)
     case 'DELETE':
-      try {
-        const one = await Oferta.findByIdAndDelete(id)
-        if (!one) return res.status(404).json({ msg: 'No se encontro el Dato' })
-        return res.status(204).json({ msg: 'Se elimino correctamente' })
-      } catch (error) {
-        const msg = (error as Error).message
-        return res.status(400).json({ msg })
-      }
+      const respuesta = await eliminarOferta(body.id)
+      const jsonRes = 'data' in respuesta ? respuesta.data : respuesta.msg
+      return res.status(respuesta.status).json(jsonRes)
     default:
       return res.status(400).json({ msg: 'Este metodo no esta implementado' })
   }

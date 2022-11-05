@@ -1,35 +1,29 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { dbConnect } from 'src/modules/mongodb/inicializacion'
-import Oferta, { OfertaType } from 'src/modules/mongodb/schema/ofertaModel'
-
-dbConnect()
+import {
+  obtenerOfertas,
+  registrarOferta,
+} from 'src/common/utils/crudMetodos/ofertaMetodos'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<OfertaType>,
+  res: NextApiResponse<any>,
 ) {
   const { method, body } = req
   switch (method) {
     case 'GET':
-      try {
-        const allOferta = await Oferta.find()
-        return res.status(200).json(allOferta)
-
-        //return res.status(200).json({ msg: 'Hola' })
-      } catch (error) {
-        const msg = (error as Error).message
-        return res.status(500).json({ msg })
-      }
+      const ofertas = await obtenerOfertas()
+      const jsonGet = 'data' in ofertas ? ofertas.data : ofertas.msg
+      return res.status(ofertas.status).json(jsonGet)
     case 'POST':
-      try {
-        const newOferta = new Oferta(body)
-        //newData.id = new Types.ObjectId()
-        const savedOferta = await newOferta.save()
-        return res.status(201).json(savedOferta)
-      } catch (error) {
-        const msg = (error as Error).message
-        return res.status(500).json({ msg })
-      }
+      const { oferta } = body
+      if (!oferta)
+        return res
+          .status(404)
+          .json({ msg: 'Los datos requeridos estan incompletos' })
+
+      const result = await registrarOferta(oferta)
+      const json = 'data' in result ? result.data : result.msg
+      return res.status(result.status).json(json)
     default:
       return res.status(400).json({ msg: 'Este metodo no esta implementado' })
   }
