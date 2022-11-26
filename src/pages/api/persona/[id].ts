@@ -1,9 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import {
-  actualizarPersona,
-  eliminarPersona,
-  personaPorId,
-} from 'src/common/utils/crudMetodos/personaMetodos'
+import PersonaDAO from 'src/common/utils/crudMetodos/personaDAO'
+import ValitaditionPersonaDAO from 'src/common/utils/crudMetodos/validationPersona'
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,18 +11,18 @@ export default async function handler(
     body,
     query: { id },
   } = req
+  const personaDao = new ValitaditionPersonaDAO(new PersonaDAO())
   switch (method) {
     case 'GET':
-      const encontrado = await personaPorId(id as string)
+      const encontrado = await personaDao.read(id as string)
       const jsonGet = 'data' in encontrado ? encontrado.data : encontrado.msg
       return res.status(encontrado.status).json(jsonGet)
     case 'PUT':
-      const { persona } = body
-      const result = await actualizarPersona(body.id, persona)
+      const result = await personaDao.update({ persona: body, id: id })
       const json = 'data' in result ? result.data : result.msg
       return res.status(result.status).json(json)
     case 'DELETE':
-      const respuesta = await eliminarPersona(body.id)
+      const respuesta = await personaDao.delete({ id })
       const jsonRes = 'data' in respuesta ? respuesta.data : respuesta.msg
       return res.status(respuesta.status).json(jsonRes)
     default:

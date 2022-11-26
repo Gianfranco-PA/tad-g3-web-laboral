@@ -77,7 +77,7 @@ export default function LoginPage({}) {
             Iniciar sesión
           </button>
         </form>
-        <Link href="">
+        <Link href="/company-registration">
           <a className="text-decoration-none mt-3">¿No estas registrado?</a>
         </Link>
       </div>

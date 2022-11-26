@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { obtenerUsuario } from 'src/common/utils/crudMetodos/autenticacionMetodos'
+import AutenticacionUsuario from 'src/common/utils/crudMetodos/autenticacion'
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,11 +8,8 @@ export default async function handler(
   const { method, body } = req
   switch (method) {
     case 'POST':
-      const { credenciales } = body
-      if (!('correo' in credenciales && 'contrasenia' in credenciales)) {
-        return res.status(400).json({ msg: 'No se cumplio con los requisitos' })
-      }
-      const result = await obtenerUsuario(credenciales)
+      const aut = new AutenticacionUsuario()
+      const result = await aut.getUsuario(body)
       const json = 'data' in result ? result.data : result.msg
       return res.status(result.status).json(json)
     default:

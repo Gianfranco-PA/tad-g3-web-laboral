@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { registrarPersona } from 'src/common/utils/crudMetodos/personaMetodos'
+import PersonaDAO from 'src/common/utils/crudMetodos/personaDAO'
+import ValitaditionPersonaDAO from 'src/common/utils/crudMetodos/validationPersona'
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,31 +8,12 @@ export default async function handler(
 ) {
   const { method, body } = req
   switch (method) {
-    // case 'GET':
-    //   try {
-    //     const { credenciales } = body
-    //     const allCredenciales = await Credencial.findOne({ credenciales })
-    //     const allPersona = await Persona.find({
-    //       credenciales: allCredenciales._id,
-    //     })
-    //     return res.status(200).json(allPersona)
-
-    //     //return res.status(200).json({ msg: 'Hola' })
-    //   } catch (error) {
-    //     const msg = (error as Error).message
-    //     return res.status(500).json({ msg })
-    //   }
-
     case 'POST':
-      const { credenciales, persona } = body
-      if (!credenciales || !persona)
-        return res
-          .status(404)
-          .json({ msg: 'Los datos requeridos estan incompletos' })
-
-      const result = await registrarPersona(credenciales, persona)
-      const json = 'data' in result ? result.data : result.msg
-      return res.status(result.status).json(json)
+      let dao = new PersonaDAO()
+      dao = new ValitaditionPersonaDAO(dao)
+      const post = await dao.create(body)
+      const json = 'data' in post ? post.data : post.msg
+      return res.status(post.status).json(json)
     default:
       return res.status(400).json({ msg: 'Este metodo no esta implementado' })
   }
