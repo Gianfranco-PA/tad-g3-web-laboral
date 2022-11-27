@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import Logo from 'src/common/assets/images/logo.png'
+import Logo from 'src/common/assets/images/Logo.png'
 import { showRoutesNavbar } from 'src/common/utils/constans/routesProject'
 import ItemNavbar from './itemNavbar'
 
