@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
 import background from 'src/common/assets/images/Login_espacio.jpeg'
 import { Campo } from 'src/common/components/campoInput'
-import server from 'src/common/utils/constans/urlEnvironment'
 import { CredencialType } from 'src/modules/mongodb/schema/credencialModel'
 
 export default function LoginPage({}) {
@@ -26,8 +25,7 @@ export default function LoginPage({}) {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('dominio es: ' + server)
-    await fetch(`${server}/api/autenticacion`, {
+    await fetch(`/api/autenticacion`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -78,7 +76,7 @@ export default function LoginPage({}) {
             Iniciar sesión
           </button>
         </form>
-        <Link href="/company-registration">
+        <Link href="/registro-empresa">
           <a className="text-decoration-none mt-3">¿No estas registrado?</a>
         </Link>
       </div>
