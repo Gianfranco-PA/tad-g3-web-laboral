@@ -9,7 +9,7 @@ export default class AutenticacionUsuario {
     let personaDao = new PersonaDAO()
     personaDao = new ValidationPersonaDAO(personaDao)
     let result = await personaDao.read(datos)
-    if (!(result.status == 404)) {
+    if (result.status == 404) {
       let empresaDao = new EmpresaDAO()
       empresaDao = new ValidationEmpresaDAO(empresaDao)
       result = await empresaDao.read(datos)
