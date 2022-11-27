@@ -10,14 +10,14 @@ interface layoutPrincipalProps {
 
 export default function PrincipalLayout({ children }: layoutPrincipalProps) {
   const router = useRouter()
-  const page = showRoutesPage.filter((elem) => elem.href === router.pathname)[0]
+  const page = showRoutesPage.find((elem) => elem.href === router.pathname)
   useEffect(() => {
     require('bootstrap/dist/js/bootstrap')
   }, [])
   return (
     <>
       <Head>
-        <title>{page.title}</title>
+        <title>{page?.title}</title>
         <meta name="author" content="G3" />
         <meta
           name="description"
@@ -30,7 +30,7 @@ export default function PrincipalLayout({ children }: layoutPrincipalProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main>
-        {page.navbar && <Navbar />}
+        {page?.navbar && <Navbar />}
         {children}
       </main>
     </>
