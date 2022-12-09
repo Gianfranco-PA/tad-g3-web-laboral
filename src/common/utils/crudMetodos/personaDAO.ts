@@ -4,17 +4,16 @@ import { dbConnect } from 'src/modules/mongodb/inicializacion'
 import Credencial, {
   CredencialType,
 } from 'src/modules/mongodb/schema/credencialModel'
-import Empresa from 'src/modules/mongodb/schema/empresaModel'
-import Persona, { PersonaType } from 'src/modules/mongodb/schema/personaModel'
+import Persona, { PersonaTypePrimitive } from 'src/modules/mongodb/schema/personaModel'
 
 export interface createPersonaDAO {
   credenciales: CredencialType
-  persona: PersonaType
+  persona: PersonaTypePrimitive
 }
 
 export interface updatePersonaDAO {
   id: Schema.Types.ObjectId
-  persona: PersonaType
+  persona: PersonaTypePrimitive
 }
 
 export type readPersonaDAO = Schema.Types.ObjectId | CredencialType | undefined

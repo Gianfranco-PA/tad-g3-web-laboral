@@ -3,10 +3,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Logo from 'src/common/assets/images/Logo.png'
 import { showRoutesNavbar } from 'src/common/utils/constans/routesProject'
+import { useLoginContext } from 'src/hook/useLogin'
 import ItemNavbar from './itemNavbar'
 
 export default function Navbar() {
   const router = useRouter()
+  const loginData = useLoginContext()
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow">
       <div className="container-fluid">
@@ -40,15 +42,43 @@ export default function Navbar() {
             })}
           </ul>
           <div className="d-flex justify-content-end ms-auto">
-            <Link href="/login">
-              <a className="btn btn-primary mx-2">Iniciar Sesión</a>
-            </Link>
-            <Link href="/registro-empresa">
-              <a className="btn btn-danger mx-2">Registrar empresa</a>
-            </Link>
+            {loginData.user ? <Logueado /> : <NoLogueado />}
           </div>
         </div>
       </div>
     </nav>
+  )
+}
+
+const NoLogueado = () => {
+  return (
+    <>
+      <Link href="/login">
+        <a className="btn btn-primary mx-2">Iniciar Sesión</a>
+      </Link>
+      <Link href="/registro-persona">
+        <a className="btn btn-danger mx-2">Registrarse como persona</a>
+      </Link>
+      <Link href="/registro-empresa">
+        <a className="btn btn-danger mx-2">Registrarse como empresa</a>
+      </Link>
+    </>
+  )
+}
+
+const Logueado = () => {
+  const loginData = useLoginContext()
+  return (
+    <>
+      <Link href="/perfil">
+        <a className="btn btn-primary mx-2">Perfil</a>
+      </Link>
+      <button
+        className="btn btn-danger mx-2"
+        onClick={() => loginData.onChangeUser!(null)}
+      >
+        Cerrar sesión
+      </button>
+    </>
   )
 }

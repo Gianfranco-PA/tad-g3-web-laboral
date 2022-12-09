@@ -19,4 +19,5 @@ export const showRoutesPage: Array<RoutesPageType> = [
   { title: 'Buscar Empleo', href: '/buscar-oferta', navbar: true },
   { title: 'Iniciar sesión', href: '/login' },
   { title: 'Registrar Empresa', href: '/registro-empresa' },
+  { title: 'Perfil', href: '/perfil', navbar: true  },
 ]

@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
 import background from 'src/common/assets/images/Login_espacio.jpeg'
-import { Campo } from 'src/common/components/campoInput'
+import { CampoInput } from 'src/common/components/campoInput'
+import { useLoginContext } from 'src/hook/useLogin'
 import { CredencialType } from 'src/modules/mongodb/schema/credencialModel'
 
 export default function LoginPage({}) {
@@ -11,10 +12,11 @@ export default function LoginPage({}) {
     contrasenia: '',
   })
 
-  const [logueado, setLogueado] = useState(null)
+  const logueado = useLoginContext()
 
   const router = useRouter()
-  if (logueado) router.push('/')
+
+  if (logueado.user) router.push('/')
 
   const changeHandler = (e: FormEvent<HTMLInputElement>) => {
     return setUsuario({
@@ -31,11 +33,14 @@ export default function LoginPage({}) {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-      body: JSON.stringify({ credenciales: usuario }),
+      body: JSON.stringify({ ...usuario }),
     })
       .then((res) => res.json())
       .then((data) => {
-        if (typeof data == 'object') setLogueado(data)
+        if (typeof data == 'object') {
+          logueado.onChangeUser!(data)
+          // router.push('/')
+        }
       })
   }
 
@@ -56,7 +61,7 @@ export default function LoginPage({}) {
           className="w-100 d-flex flex-column justify-content-center align-items-center"
           onSubmit={onSubmit}
         >
-          <Campo
+          <CampoInput
             id="correo"
             name="correo"
             label="Correo:"
@@ -64,7 +69,7 @@ export default function LoginPage({}) {
             onChange={changeHandler}
             type="text"
           />
-          <Campo
+          <CampoInput
             id="contrasenia"
             name="contrasenia"
             label="Contraseña:"
@@ -76,9 +81,16 @@ export default function LoginPage({}) {
             Iniciar sesión
           </button>
         </form>
-        <Link href="/registro-empresa">
-          <a className="text-decoration-none mt-3">¿No estas registrado?</a>
-        </Link>
+        <div style={{ display: 'flex' }}>
+          <p>Registrarse como&nbsp;</p>
+          <Link href="/registro-persona">
+            <a className="text-decoration-none">persona</a>
+          </Link>
+          <p>&nbsp;o&nbsp;</p>
+          <Link href="/registro-empresa">
+            <a className="text-decoration-none">empresa</a>
+          </Link>
+        </div>
       </div>
     </div>
   )

@@ -1,5 +1,6 @@
-import { Schema, model, models, InferSchemaType } from 'mongoose'
+import { Schema, model, models, InferSchemaType, Types } from 'mongoose'
 import autopopulate from 'mongoose-autopopulate'
+import { CredencialType } from './credencialModel'
 
 const empresaSchema = new Schema({
   nombre_empresa: { type: 'string', require: true },
@@ -24,4 +25,9 @@ const Empresa = models.empresa || model('empresa', empresaSchema)
 
 export default Empresa
 
-export type EmpresaType = InferSchemaType<typeof empresaSchema>
+export type EmpresaTypePrimitive = InferSchemaType<typeof empresaSchema>
+
+export type EmpresaTypeData = Omit<EmpresaTypePrimitive, 'credenciales'> & {
+  _id: Types.ObjectId
+  credenciales: CredencialType
+}

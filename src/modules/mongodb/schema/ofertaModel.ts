@@ -15,3 +15,17 @@ const Oferta = models.oferta || model('oferta', ofertaSchema)
 export default Oferta
 
 export type OfertaType = InferSchemaType<typeof ofertaSchema>
+
+export function isOferta(arg: any): arg is OfertaType {
+  return (
+    arg &&
+    arg.titulo &&
+    arg.descripcion &&
+    arg.fecha_publicacion &&
+    arg.empresa &&
+    typeof arg.titulo == 'string' &&
+    typeof arg.descripcion == 'string' &&
+    typeof arg.fecha_publicacion == 'string' &&
+    typeof arg.empresa == 'string'
+  )
+}

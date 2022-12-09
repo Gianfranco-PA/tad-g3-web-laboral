@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
 import background from 'src/common/assets/images/Login_espacio.jpeg'
-import { Campo } from 'src/common/components/campoInput'
-import { EmpresaType } from 'src/modules/mongodb/schema/empresaModel'
+import { CampoInput } from 'src/common/components/campoInput'
+import server from 'src/common/utils/constans/urlEnvironment'
+import { EmpresaTypePrimitive } from 'src/modules/mongodb/schema/empresaModel'
 //Parameters:
-interface Empresa extends EmpresaType {
+interface Empresa extends EmpresaTypePrimitive {
   correo: string
   contrasenia: string
   conf_contrasenia: string
@@ -47,7 +48,7 @@ export default function LoginPage({}) {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await fetch(`/api/empresa`, {
+    await fetch(`${server}/api/empresa`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ export default function LoginPage({}) {
           <h1 className="fs-title">Sobre la Empresa</h1>
           <h3 className="fs-subtitle">Ingrese datos de la Empresa</h3>
 
-          <Campo
+          <CampoInput
             id="nombre_empresa"
             name="nombre_empresa"
             label="Nombre de la empresa:"
@@ -98,7 +99,7 @@ export default function LoginPage({}) {
             onChange={changeHandler}
             type="text"
           />
-          <Campo
+          <CampoInput
             id="ruc"
             name="ruc"
             label="RUC:"
@@ -106,7 +107,7 @@ export default function LoginPage({}) {
             onChange={changeHandler}
             type="text"
           />
-          <Campo
+          <CampoInput
             id="direccion"
             name="direccion"
             label="Direccion:"
@@ -115,7 +116,7 @@ export default function LoginPage({}) {
             type="text"
           />
 
-          <Campo
+          <CampoInput
             id="ciudad"
             name="ciudad"
             label="Ciudad:"
@@ -124,7 +125,7 @@ export default function LoginPage({}) {
             type="text"
           />
 
-          <Campo
+          <CampoInput
             id="rubro"
             name="rubro"
             label="Rubro:"
@@ -136,7 +137,7 @@ export default function LoginPage({}) {
           <h1 className="fs-title">Sobre el Contacto</h1>
           <h3 className="fs-subtitle">Ingrese datos del Contacto</h3>
 
-          <Campo
+          <CampoInput
             id="nombre_contacto"
             name="nombre_contacto"
             label="Nombre:"
@@ -145,7 +146,7 @@ export default function LoginPage({}) {
             type="text"
           />
 
-          <Campo
+          <CampoInput
             id="apellidos"
             name="apellidos"
             label="Apellidos:"
@@ -154,7 +155,7 @@ export default function LoginPage({}) {
             type="text"
           />
 
-          <Campo
+          <CampoInput
             id="celular"
             name="celular"
             label="Nro Celular:"
@@ -166,7 +167,7 @@ export default function LoginPage({}) {
           <h1 className="fs-title">Para el acceso</h1>
           <h3 className="fs-subtitle">Ingrese sus credenciales</h3>
 
-          <Campo
+          <CampoInput
             id="correo"
             name="correo"
             label="Email:"
@@ -175,7 +176,7 @@ export default function LoginPage({}) {
             type="text"
           />
 
-          <Campo
+          <CampoInput
             id="contrasenia"
             name="contrasenia"
             label="Contraseña:"
@@ -184,7 +185,7 @@ export default function LoginPage({}) {
             type="password"
           />
 
-          <Campo
+          <CampoInput
             id="conf_contrasenia"
             name="conf_contrasenia"
             label="Confirmar contraseña:"

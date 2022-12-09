@@ -126,7 +126,7 @@ export default function LoginPage({}) {
             <p><span>Nombre de la Empresa:</span>...</p>
           </div>
 
-          <div className="form-row form-input-name-row">
+          <div className="form-row form-input-name-row">y
             <p><span>Lugar:</span>...</p>
           </div>
 
