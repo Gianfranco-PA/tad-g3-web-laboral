@@ -2,7 +2,6 @@ import { useRouter } from 'next/router'
 import { FormEvent, useState } from 'react'
 import background from 'src/common/assets/images/Login_espacio.jpeg'
 import { CampoInput } from 'src/common/components/campoInput'
-import server from 'src/common/utils/constans/urlEnvironment'
 import { EmpresaTypePrimitive } from 'src/modules/mongodb/schema/empresaModel'
 //Parameters:
 interface Empresa extends EmpresaTypePrimitive {
@@ -48,7 +47,7 @@ export default function LoginPage({}) {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await fetch(`${server}/api/empresa`, {
+    await fetch(`/api/empresa`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
