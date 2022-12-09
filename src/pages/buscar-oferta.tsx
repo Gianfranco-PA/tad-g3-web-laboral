@@ -1,12 +1,10 @@
 import PrincipalLayout from 'src/common/components/layouts/principal'
 import styles from 'src/common/styles/buscar.module.css'
-import {useFetch} from '../hook/useFetch'
+import { useFetch } from '../hook/useFetch'
 export default function Buscar() {
-
-  const{data} = useFetch('http://localhost:3000/api/oferta')
-  console.log(data[0])
-  const{titulo, descripcion} = data[0]
-
+  // const{data} = useFetch('http://localhost:3000/api/oferta')
+  // console.log(data[0])
+  // const{titulo, descripcion} = data[0]
 
   return (
     <div className={styles.cuerpo}>
@@ -15,7 +13,7 @@ export default function Buscar() {
         <div className={styles.body}>
           <section className={styles.cuerpo_medio}>
             <div className="card">
-              <div className="card-body">
+              {/* <div className="card-body">
                 <h5 className="card-title">{titulo}</h5>
                 <p className="card-text">
                   {descripcion}
@@ -23,9 +21,8 @@ export default function Buscar() {
                 <a href="#" className="btn btn-primary">
                   Go somewhere
                 </a>
-              </div>
+              </div> */}
             </div>
-            
           </section>
         </div>
         <div className={styles.rightSide}>Lateral Derecho</div>
