@@ -4,6 +4,7 @@ import { dbConnect } from 'src/modules/mongodb/inicializacion'
 import Credencial, {
   CredencialType,
 } from 'src/modules/mongodb/schema/credencialModel'
+import Empresa from 'src/modules/mongodb/schema/empresaModel'
 import Persona, { PersonaTypePrimitive } from 'src/modules/mongodb/schema/personaModel'
 
 export interface createPersonaDAO {

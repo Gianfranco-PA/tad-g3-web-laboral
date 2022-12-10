@@ -1,6 +1,4 @@
 import { createContext, useContext } from 'react'
-import { isEmpresaData } from 'src/common/utils/validations/empresa'
-import { isPersonaData } from 'src/common/utils/validations/persona'
 import { EmpresaTypeData } from 'src/modules/mongodb/schema/empresaModel'
 import { PersonaTypeData } from 'src/modules/mongodb/schema/personaModel'
 

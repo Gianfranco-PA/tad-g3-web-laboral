@@ -1,0 +1,19 @@
+.cuerpo {
+	background-image: url(../assets/images/Login_espacio.jpeg);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	max-width: 100%;
+  height: auto;
+}
+
+.centrado{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cabecera{
+  opacity:0.6;
+  filter:alpha(opacity=40); 
+}

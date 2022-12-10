@@ -1,4 +1,4 @@
-import { Schema, model, models, InferSchemaType } from 'mongoose'
+import { Schema, model, models, InferSchemaType, Types } from 'mongoose'
 import autopopulate from 'mongoose-autopopulate'
 
 const ofertaSchema = new Schema({
@@ -14,7 +14,9 @@ const Oferta = models.oferta || model('oferta', ofertaSchema)
 
 export default Oferta
 
-export type OfertaType = InferSchemaType<typeof ofertaSchema>
+export type OfertaType = InferSchemaType<typeof ofertaSchema> & {
+  _id?: Types.ObjectId
+}
 
 export function isOferta(arg: any): arg is OfertaType {
   return (

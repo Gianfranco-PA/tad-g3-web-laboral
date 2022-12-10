@@ -28,6 +28,6 @@ export default Empresa
 export type EmpresaTypePrimitive = InferSchemaType<typeof empresaSchema>
 
 export type EmpresaTypeData = Omit<EmpresaTypePrimitive, 'credenciales'> & {
-  _id: Types.ObjectId
-  credenciales: CredencialType
+  _id?: Types.ObjectId
+  credenciales?: CredencialType
 }

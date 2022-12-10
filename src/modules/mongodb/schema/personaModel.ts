@@ -27,6 +27,6 @@ export default Persona
 export type PersonaTypePrimitive = InferSchemaType<typeof personaSchema>
 
 export type PersonaTypeData = Omit<PersonaTypePrimitive, 'credenciales'> & {
-  _id: Types.ObjectId
-  credenciales: CredencialType
+  _id?: Types.ObjectId
+  credenciales?: CredencialType
 }

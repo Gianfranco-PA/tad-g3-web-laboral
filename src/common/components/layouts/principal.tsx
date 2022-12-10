@@ -7,6 +7,7 @@ import { EmpresaTypeData } from 'src/modules/mongodb/schema/empresaModel'
 import { PersonaTypeData } from 'src/modules/mongodb/schema/personaModel'
 import Navbar from '../navbar/navbar'
 
+
 interface layoutPrincipalProps {
   children: React.ReactNode
 }

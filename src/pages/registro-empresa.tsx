@@ -47,7 +47,7 @@ export default function LoginPage({}) {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await fetch(`/api/empresa`, {
+    await fetch(`${server}/api/empresa`, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
