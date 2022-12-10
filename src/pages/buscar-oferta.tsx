@@ -1,6 +1,4 @@
-import PrincipalLayout from 'src/common/components/layouts/principal'
 import styles from 'src/common/styles/buscar.module.css'
-import { useFetch } from '../hook/useFetch'
 import React, { useEffect, useState } from 'react'
 import { OfertaType } from 'src/modules/mongodb/schema/ofertaModel'
 
