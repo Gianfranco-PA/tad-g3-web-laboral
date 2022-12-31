@@ -2,7 +2,7 @@ import { Schema, model, models, InferSchemaType, Types } from 'mongoose'
 import autopopulate from 'mongoose-autopopulate'
 import { CredencialType } from './credencialModel'
 
-const personaSchema = new Schema({
+export const personaSchema = new Schema({
   nombre: { type: 'string' },
   apellido: { type: 'string' },
   celular: { type: 'string' },

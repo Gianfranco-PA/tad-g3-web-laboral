@@ -4,6 +4,7 @@ import { dbConnect } from 'src/modules/mongodb/inicializacion'
 import Credencial, {
   CredencialType,
 } from 'src/modules/mongodb/schema/credencialModel'
+import { encriptar } from '../criptografia/handleCrypt'
 
 export interface createCredencialDAO {
   credenciales: CredencialType
@@ -29,7 +30,10 @@ export default class CredencialDAO implements DAO {
     datos: createCredencialDAO,
   ): Promise<CompleteRequest | ErrorRequest> {
     try {
-      const nuevaCredencial = new Credencial(datos.credenciales)
+      const nuevaCredencial = new Credencial({
+        ...datos.credenciales,
+        contrasenia: encriptar(datos.credenciales.contrasenia!),
+      })
       const credencialGuardada = await nuevaCredencial.save()
       return { status: 201, data: credencialGuardada }
     } catch (error) {

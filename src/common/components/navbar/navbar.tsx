@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Logo from 'src/common/assets/images/Logo.png'
 import { showRoutesNavbar } from 'src/common/utils/constans/routesProject'
+import { isEmpresaData } from 'src/common/utils/validations/empresa'
 import { useLoginContext } from 'src/hook/useLogin'
 import ItemNavbar from './itemNavbar'
 
@@ -31,6 +32,11 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarScroll">
           <ul className="navbar-nav d-flex justify-content-end">
             {showRoutesNavbar.map((elem, index) => {
+              if (
+                elem.label === 'Mis Ofertas' &&
+                !isEmpresaData(loginData.user)
+              )
+                return null
               return (
                 <ItemNavbar
                   key={index}

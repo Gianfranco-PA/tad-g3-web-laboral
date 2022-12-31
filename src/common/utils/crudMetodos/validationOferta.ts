@@ -1,4 +1,5 @@
 import { CompleteRequest, DAO, ErrorRequest } from 'src/common/types/apiTypes'
+import { isOfertaData, isOfertaPrimitive } from '../validations/oferta'
 import OfertaDAO, {
   createOfertaDAO,
   deleteOfertaDAO,
@@ -12,7 +13,7 @@ export default class ValidationOfertaDAO implements DAO {
     this.service = service
   }
   private isCreateProps(arg: any): arg is createOfertaDAO {
-    return arg && arg.oferta && typeof arg.oferta == 'object'
+    return arg && arg.oferta && isOfertaPrimitive(arg.oferta)
   }
   private isReadProps(arg: any | undefined): arg is readOfertaDAO {
     return !arg || typeof arg == 'string'
@@ -23,7 +24,7 @@ export default class ValidationOfertaDAO implements DAO {
       arg.id &&
       arg.oferta &&
       typeof arg.id == 'string' &&
-      typeof arg.oferta == 'object'
+      isOfertaData(arg.oferta)
     )
   }
   private isDeleteProps(arg: any): arg is deleteOfertaDAO {
@@ -31,6 +32,9 @@ export default class ValidationOfertaDAO implements DAO {
   }
 
   async create(datos: any): Promise<CompleteRequest | ErrorRequest> {
+    // console.log(datos)
+    // console.log(Boolean(datos.oferta))
+    // console.log(Boolean(isOfertaPrimitive(datos.oferta)))
     if (!this.isCreateProps(datos)) {
       return { status: 500, msg: 'Los datos enviados estan incompletos' }
     }
@@ -43,6 +47,7 @@ export default class ValidationOfertaDAO implements DAO {
     return await this.service.read(datos)
   }
   async update(datos: any): Promise<CompleteRequest | ErrorRequest> {
+    // console.log(datos)
     if (!this.isUpdateProps(datos)) {
       return { status: 500, msg: 'Los datos enviados estan incompletos' }
     }

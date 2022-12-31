@@ -81,7 +81,7 @@ const Persona = ({
           if (isPersonaData(data)) {
             context.onChangeUser!(data)
           } else {
-            console.log(data)
+            // console.log(data)
           }
         })
     }
@@ -235,7 +235,7 @@ const Empresa = ({ data, onChangeInput, context }: PerfilEmpresa) => {
           if (isPersonaData(data)) {
             context.onChangeUser!(data)
           } else {
-            console.log(data)
+            // console.log(data)
           }
         })
     }

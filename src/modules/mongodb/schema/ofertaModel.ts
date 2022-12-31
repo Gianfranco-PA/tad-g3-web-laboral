@@ -1,10 +1,21 @@
 import { Schema, model, models, InferSchemaType, Types } from 'mongoose'
 import autopopulate from 'mongoose-autopopulate'
+import { EmpresaTypeData } from './empresaModel'
+import { personaSchema, PersonaTypeData } from './personaModel'
 
 const ofertaSchema = new Schema({
   titulo: { type: 'string' },
-  descripcion: { type: 'string' },
+  conocimientos: { type: 'string' },
+  estudios_minimos: { type: 'string' },
+  idioma: { type: 'string' },
+  lugar: { type: 'string' },
+  puesto: { type: 'string' },
+  area: { type: 'string' },
+  jornada_laboral: { type: 'string' },
   fecha_publicacion: { type: 'string' },
+  postulantes: [
+    { type: Schema.Types.ObjectId, ref: 'persona', autopopulate: true },
+  ],
   empresa: { type: Schema.Types.ObjectId, ref: 'empresa', autopopulate: true },
 })
 
@@ -14,20 +25,14 @@ const Oferta = models.oferta || model('oferta', ofertaSchema)
 
 export default Oferta
 
-export type OfertaType = InferSchemaType<typeof ofertaSchema> & {
+export type OfertaTypePrimitive = InferSchemaType<typeof ofertaSchema> & {
   _id?: Types.ObjectId
 }
 
-export function isOferta(arg: any): arg is OfertaType {
-  return (
-    arg &&
-    arg.titulo &&
-    arg.descripcion &&
-    arg.fecha_publicacion &&
-    arg.empresa &&
-    typeof arg.titulo == 'string' &&
-    typeof arg.descripcion == 'string' &&
-    typeof arg.fecha_publicacion == 'string' &&
-    typeof arg.empresa == 'string'
-  )
+export type OfertaTypeData = Omit<
+  OfertaTypePrimitive,
+  'empresa' | 'postulantes'
+> & {
+  empresa?: EmpresaTypeData
+  postulantes: Array<PersonaTypeData>
 }

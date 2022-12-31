@@ -3,8 +3,12 @@ import { CompleteRequest, DAO, ErrorRequest } from 'src/common/types/apiTypes'
 import { dbConnect } from 'src/modules/mongodb/inicializacion'
 import Credencial, {
   CredencialType,
+  isCredencial,
 } from 'src/modules/mongodb/schema/credencialModel'
-import Empresa, { EmpresaTypePrimitive } from 'src/modules/mongodb/schema/empresaModel'
+import Empresa, {
+  EmpresaTypePrimitive,
+} from 'src/modules/mongodb/schema/empresaModel'
+import { comparar, encriptar } from '../criptografia/handleCrypt'
 
 export interface createEmpresaDAO {
   credenciales: CredencialType
@@ -31,7 +35,11 @@ export default class EmpresaDAO implements DAO {
     const session = await mongoose.startSession()
     try {
       session.startTransaction()
-      const nuevaCredencial = new Credencial(datos.credenciales)
+      const encriptado = await encriptar(datos.credenciales.contrasenia!)
+      const nuevaCredencial = new Credencial({
+        ...datos.credenciales,
+        contrasenia: encriptado,
+      })
       const credencialGuardada = await nuevaCredencial.save({ session })
       const newEmpresa = new Empresa({
         ...datos.empresa,
@@ -56,8 +64,14 @@ export default class EmpresaDAO implements DAO {
           empresa = await Empresa.findOne({ _id: datos })
           break
         case 'object':
-          const credencial = await Credencial.findOne({ ...datos })
-          empresa = await Empresa.findOne({ credenciales: credencial._id })
+          if (isCredencial(datos)) {
+            const credencial = await Credencial.findOne({
+              correo: datos.correo,
+            })
+            if (await comparar(datos.contrasenia!, credencial.contrasenia)) {
+              empresa = await Empresa.findOne({ credenciales: credencial._id })
+            }
+          }
           break
         case 'undefined':
         default:

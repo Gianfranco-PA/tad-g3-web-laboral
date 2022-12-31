@@ -3,9 +3,12 @@ import { CompleteRequest, DAO, ErrorRequest } from 'src/common/types/apiTypes'
 import { dbConnect } from 'src/modules/mongodb/inicializacion'
 import Credencial, {
   CredencialType,
+  isCredencial,
 } from 'src/modules/mongodb/schema/credencialModel'
-import Empresa from 'src/modules/mongodb/schema/empresaModel'
-import Persona, { PersonaTypePrimitive } from 'src/modules/mongodb/schema/personaModel'
+import Persona, {
+  PersonaTypePrimitive,
+} from 'src/modules/mongodb/schema/personaModel'
+import { comparar, encriptar } from '../criptografia/handleCrypt'
 
 export interface createPersonaDAO {
   credenciales: CredencialType
@@ -32,7 +35,11 @@ export default class PersonaDAO implements DAO {
     const session = await mongoose.startSession()
     try {
       session.startTransaction()
-      const nuevaCredencial = new Credencial(datos.credenciales)
+      const encriptado = await encriptar(datos.credenciales.contrasenia!)
+      const nuevaCredencial = new Credencial({
+        ...datos.credenciales,
+        contrasenia: encriptado,
+      })
       const credencialGuardada = await nuevaCredencial.save({ session })
       const newPersona = new Persona({
         ...datos.persona,
@@ -57,8 +64,14 @@ export default class PersonaDAO implements DAO {
           persona = await Persona.findOne({ _id: datos })
           break
         case 'object':
-          const credencial = await Credencial.findOne({ ...datos })
-          persona = await Persona.findOne({ credenciales: credencial._id })
+          if (isCredencial(datos)) {
+            const credencial = await Credencial.findOne({
+              correo: datos.correo,
+            })
+            if (await comparar(datos.contrasenia!, credencial.contrasenia)) {
+              persona = await Persona.findOne({ credenciales: credencial._id })
+            }
+          }
           break
         case 'undefined':
         default:

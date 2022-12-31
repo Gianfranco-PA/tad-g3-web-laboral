@@ -1,15 +1,17 @@
 import mongoose, { Schema } from 'mongoose'
 import { CompleteRequest, DAO, ErrorRequest } from 'src/common/types/apiTypes'
 import { dbConnect } from 'src/modules/mongodb/inicializacion'
-import Oferta, { OfertaType } from 'src/modules/mongodb/schema/ofertaModel'
+import Oferta, {
+  OfertaTypePrimitive,
+} from 'src/modules/mongodb/schema/ofertaModel'
 
 export interface createOfertaDAO {
-  oferta: OfertaType
+  oferta: OfertaTypePrimitive
 }
 
 export interface updateOfertaDAO {
   id: Schema.Types.ObjectId
-  oferta: OfertaType
+  oferta: OfertaTypePrimitive
 }
 
 export type readOfertaDAO = Schema.Types.ObjectId | undefined
@@ -27,7 +29,7 @@ export default class OfertaDAO implements DAO {
     const session = await mongoose.startSession()
     try {
       session.startTransaction()
-      const nuevaOferta = new Oferta(datos.oferta)
+      const nuevaOferta = new Oferta({ ...datos.oferta, postulantes: [] })
       const guardado = await nuevaOferta.save({ session })
       await session.commitTransaction()
       await session.endSession()

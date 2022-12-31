@@ -6,6 +6,7 @@ interface RoutesNavbarType {
 export const showRoutesNavbar: Array<RoutesNavbarType> = [
   { label: 'Inicio', href: '/' },
   { label: 'Empleos', href: '/buscar-oferta' },
+  { label: 'Mis Ofertas', href: '/crud' },
 ]
 
 interface RoutesPageType {
@@ -19,5 +20,8 @@ export const showRoutesPage: Array<RoutesPageType> = [
   { title: 'Buscar Empleo', href: '/buscar-oferta', navbar: true },
   { title: 'Iniciar sesión', href: '/login' },
   { title: 'Registrar Empresa', href: '/registro-empresa' },
-  { title: 'Perfil', href: '/perfil', navbar: true  },
+  { title: 'Registrar Persona', href: '/registro-persona' },
+  { title: 'Perfil', href: '/perfil', navbar: true },
+  { title: 'Ofertas', href: '/crud', navbar: true },
+  { title: 'Detalle', href: '/oferta', navbar: true },
 ]
